@@ -1,0 +1,132 @@
+{
+  "extName": {
+    "message": "国家英文/中文名称及简称查询"
+  },
+  "extDescription": {
+    "message": "基于本地国家数据，支持按中文名、英文名和国家代码快速查询并一键复制。"
+  },
+  "actionTitle": {
+    "message": "国家名称与简称查询"
+  },
+  "cmdOpenPopupDescription": {
+    "message": "打开国家名称与简称查询弹窗"
+  },
+  "contextMenuSearch": {
+    "message": "使用国家查询插件搜索 \"%s\""
+  },
+  "contextMenuLookupIp": {
+    "message": "查 IP \"%s\""
+  },
+  "contextMenuQuery": {
+    "message": "查询 \"%s\""
+  },
+  "popupTitle": {
+    "message": "国家名称与简称查询"
+  },
+  "headerTitle": {
+    "message": "国家查询"
+  },
+  "searchPlaceholder": {
+    "message": "输入国家中文/英文/代码进行搜索"
+  },
+  "footerHint": {
+    "message": "提示：支持按国家中文、英文或代码模糊搜索"
+  },
+  "thChineseName": {
+    "message": "中文名"
+  },
+  "thEnglishName": {
+    "message": "英文名"
+  },
+  "thRegion": {
+    "message": "洲/地区"
+  },
+  "thAlpha2": {
+    "message": "Alpha-2"
+  },
+  "thAlpha3": {
+    "message": "Alpha-3"
+  },
+  "thNumeric": {
+    "message": "数字码"
+  },
+  "thActions": {
+    "message": "操作"
+  },
+  "noQuery": {
+    "message": "请输入关键词开始查询"
+  },
+  "noResult": {
+    "message": "暂无匹配结果"
+  },
+  "toastCopied": {
+    "message": "已复制__LABEL__：__VALUE__"
+  },
+  "toastCopyFailed": {
+    "message": "复制失败，请重试"
+  },
+  "toastNothingToCopy": {
+    "message": "无可复制内容"
+  },
+  "labelChineseName": {
+    "message": "中文名"
+  },
+  "labelEnglishName": {
+    "message": "英文名"
+  },
+  "labelAlpha2": {
+    "message": "Alpha-2 代码"
+  },
+  "labelAlpha3": {
+    "message": "Alpha-3 代码"
+  },
+  "tabCountries": {
+    "message": "国家"
+  },
+  "tabIp": {
+    "message": "IP"
+  },
+  "ipPlaceholder": {
+    "message": "输入 IP 或域名（留空查询当前 IP）"
+  },
+  "ipQueryBtn": {
+    "message": "查询"
+  },
+  "ipEmpty": {
+    "message": "请输入 IP 或域名开始查询"
+  },
+  "ipLoading": {
+    "message": "查询中..."
+  },
+  "ipNetworkError": {
+    "message": "网络错误，请稍后重试"
+  },
+  "ipQueryFailed": {
+    "message": "查询失败"
+  },
+  "ipFieldQuery": {
+    "message": "IP"
+  },
+  "ipFieldCountry": {
+    "message": "国家"
+  },
+  "ipFieldCountryCode": {
+    "message": "国家代码"
+  },
+  "ipFieldRegion": {
+    "message": "地区/州"
+  },
+  "ipFieldCity": {
+    "message": "城市"
+  },
+  "ipFieldIsp": {
+    "message": "ISP"
+  },
+  "ipFieldTimezone": {
+    "message": "时区"
+  },
+  "ipFieldLatLon": {
+    "message": "经纬度"
+  }
+}
+

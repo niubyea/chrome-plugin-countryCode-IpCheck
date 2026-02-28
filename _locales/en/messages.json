@@ -1,0 +1,132 @@
+{
+  "extName": {
+    "message": "Country Name & Code Lookup"
+  },
+  "extDescription": {
+    "message": "Quickly search country English/Chinese names and ISO codes (alpha-2/alpha-3) from local data."
+  },
+  "actionTitle": {
+    "message": "Country name & code search"
+  },
+  "cmdOpenPopupDescription": {
+    "message": "Open country name & code search popup"
+  },
+  "contextMenuSearch": {
+    "message": "Search country for \"%s\""
+  },
+  "contextMenuLookupIp": {
+    "message": "Lookup IP \"%s\""
+  },
+  "contextMenuQuery": {
+    "message": "Query \"%s\""
+  },
+  "popupTitle": {
+    "message": "Country name & code search"
+  },
+  "headerTitle": {
+    "message": "Country lookup"
+  },
+  "searchPlaceholder": {
+    "message": "Search by Chinese / English / code"
+  },
+  "footerHint": {
+    "message": "Tip: supports fuzzy search by Chinese, English or ISO codes"
+  },
+  "thChineseName": {
+    "message": "Chinese"
+  },
+  "thEnglishName": {
+    "message": "English"
+  },
+  "thRegion": {
+    "message": "Region"
+  },
+  "thAlpha2": {
+    "message": "Alpha-2"
+  },
+  "thAlpha3": {
+    "message": "Alpha-3"
+  },
+  "thNumeric": {
+    "message": "Numeric"
+  },
+  "thActions": {
+    "message": "Copy"
+  },
+  "noQuery": {
+    "message": "Type a keyword to start searching"
+  },
+  "noResult": {
+    "message": "No matching countries"
+  },
+  "toastCopied": {
+    "message": "Copied __LABEL__: __VALUE__"
+  },
+  "toastCopyFailed": {
+    "message": "Copy failed, please retry"
+  },
+  "toastNothingToCopy": {
+    "message": "Nothing to copy"
+  },
+  "labelChineseName": {
+    "message": "Chinese name"
+  },
+  "labelEnglishName": {
+    "message": "English name"
+  },
+  "labelAlpha2": {
+    "message": "Alpha-2 code"
+  },
+  "labelAlpha3": {
+    "message": "Alpha-3 code"
+  },
+  "tabCountries": {
+    "message": "Countries"
+  },
+  "tabIp": {
+    "message": "IP"
+  },
+  "ipPlaceholder": {
+    "message": "IP or domain (empty = current IP)"
+  },
+  "ipQueryBtn": {
+    "message": "Lookup"
+  },
+  "ipEmpty": {
+    "message": "Type an IP or domain to lookup"
+  },
+  "ipLoading": {
+    "message": "Looking up..."
+  },
+  "ipNetworkError": {
+    "message": "Network error, please retry"
+  },
+  "ipQueryFailed": {
+    "message": "Lookup failed"
+  },
+  "ipFieldQuery": {
+    "message": "IP"
+  },
+  "ipFieldCountry": {
+    "message": "Country"
+  },
+  "ipFieldCountryCode": {
+    "message": "Country code"
+  },
+  "ipFieldRegion": {
+    "message": "Region"
+  },
+  "ipFieldCity": {
+    "message": "City"
+  },
+  "ipFieldIsp": {
+    "message": "ISP"
+  },
+  "ipFieldTimezone": {
+    "message": "Timezone"
+  },
+  "ipFieldLatLon": {
+    "message": "Lat/Lon"
+  }
+}
+
