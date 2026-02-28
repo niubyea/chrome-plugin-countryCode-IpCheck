@@ -477,6 +477,7 @@ async function initQueryFromStorage() {
       ensureIpPanel();
       if (el.ipInputEl) el.ipInputEl.value = data.initialIpQuery;
       setActiveTab("ip");
+      setTimeout(lookupIp, 350);
       return;
     }
     if (data.initialQuery && el.searchInput) {
@@ -523,6 +524,7 @@ function applyI18nStaticTexts() {
 function buildUI() {
   var root = document.getElementById("root");
   if (!root) return;
+  root.textContent = "";
   var c = document.createElement("div");
   c.className = "container";
   var header = document.createElement("header");
