@@ -2,12 +2,58 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
+    <!-- HTML 中的 __MSG_key__ 不会被 Chrome 替换（只有 manifest.json 和 CSS 支持），
+         因此这里写 default_locale(zh_CN) 的文案作为首帧兜底，
+         再由 popup.js 在 defer 脚本中按当前语言覆盖。 -->
     <title>国家名称与简称查询</title>
     <link rel="stylesheet" href="popup.css" />
+    <script src="popup.js" defer></script>
   </head>
   <body>
-    <div id="root">加载中...</div>
+    <div id="root">
+      <div class="container">
+        <header class="header">
+          <h1 id="headerTitle" class="title" data-i18n="headerTitle">国家查询</h1>
+          <div class="tabs" role="tablist">
+            <button id="tabCountries" class="tab tab-active" type="button" role="tab" aria-selected="true" data-i18n="tabCountries">国家</button>
+            <button id="tabIp" class="tab" type="button" role="tab" aria-selected="false" data-i18n="tabIp">IP</button>
+          </div>
+          <input id="searchInput" class="search-input" type="text" data-i18n-placeholder="searchPlaceholder"
+                 placeholder="输入国家中文/英文/代码进行搜索" aria-label="输入国家中文/英文/代码进行搜索" />
+        </header>
+        <main class="main">
+          <section id="panelCountries" class="panel" role="tabpanel">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th data-i18n="thChineseName">中文名</th>
+                  <th data-i18n="thEnglishName">英文名</th>
+                  <th data-i18n="thRegion">洲/地区</th>
+                  <th data-i18n="thAlpha2">Alpha-2</th>
+                  <th data-i18n="thAlpha3">Alpha-3</th>
+                  <th data-i18n="thNumeric">数字码</th>
+                  <th data-i18n="thActions">操作</th>
+                </tr>
+              </thead>
+              <tbody id="resultsBody"></tbody>
+            </table>
+            <div id="noResult" class="no-result" hidden data-i18n="noQuery">请输入关键词开始查询</div>
+          </section>
+          <section id="panelIp" class="panel" role="tabpanel" hidden>
+            <div id="ipBar" class="ip-bar">
+              <input id="ipInput" class="search-input" type="text" data-i18n-placeholder="ipPlaceholder"
+                     placeholder="输入 IP 或域名（留空查询当前 IP）" aria-label="输入 IP 或域名（留空查询当前 IP）" />
+              <button id="ipQueryBtn" class="ip-btn" type="button" data-i18n="ipQueryBtn">查询</button>
+            </div>
+            <div id="ipEmpty" class="no-result" hidden data-i18n="ipEmpty">请输入 IP 或域名开始查询</div>
+            <div id="ipResult" class="ip-result" hidden></div>
+          </section>
+        </main>
+        <footer class="footer">
+          <span id="footerHint" class="hint" data-i18n="footerHint">提示：支持按国家中文、英文或代码模糊搜索</span>
+        </footer>
+      </div>
+    </div>
     <div id="toast" class="toast" hidden></div>
-    <script src="popup.js"></script>
   </body>
 </html>

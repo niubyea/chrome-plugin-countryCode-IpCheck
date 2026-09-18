@@ -59,6 +59,9 @@
   "noResult": {
     "message": "No matching countries"
   },
+  "loadFailed": {
+    "message": "Failed to load"
+  },
   "toastCopied": {
     "message": "Copied __LABEL__: __VALUE__"
   },

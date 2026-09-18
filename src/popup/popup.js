@@ -26,7 +26,6 @@ const el = {
  *  aliases?: string[];
  * }>} */
 let countries = [];
-var ipPanelBuilt = false;
 
 function t(key, fallback) {
   try {
@@ -76,51 +75,8 @@ function getIpApiLang() {
   return "en";
 }
 
-function ensureIpPanel() {
-  if (ipPanelBuilt) return;
-  ipPanelBuilt = true;
-  if (!el.panelIpEl) return;
-  var ipBar = document.createElement("div");
-  ipBar.id = "ipBar";
-  ipBar.className = "ip-bar";
-  var ipInput = document.createElement("input");
-  ipInput.id = "ipInput";
-  ipInput.className = "search-input";
-  ipInput.type = "text";
-  ipInput.placeholder = t("ipPlaceholder", "输入 IP 或域名（留空查询当前 IP）");
-  var ipBtn = document.createElement("button");
-  ipBtn.id = "ipQueryBtn";
-  ipBtn.className = "ip-btn";
-  ipBtn.type = "button";
-  ipBtn.textContent = t("ipQueryBtn", "查询");
-  ipBar.appendChild(ipInput);
-  ipBar.appendChild(ipBtn);
-  var ipEmpty = document.createElement("div");
-  ipEmpty.id = "ipEmpty";
-  ipEmpty.className = "no-result";
-  ipEmpty.hidden = true;
-  ipEmpty.textContent = t("ipEmpty", "请输入 IP 或域名开始查询");
-  var ipResult = document.createElement("div");
-  ipResult.id = "ipResult";
-  ipResult.className = "ip-result";
-  ipResult.hidden = true;
-  el.panelIpEl.appendChild(ipBar);
-  el.panelIpEl.appendChild(ipEmpty);
-  el.panelIpEl.appendChild(ipResult);
-  el.ipBarEl = ipBar;
-  el.ipInputEl = ipInput;
-  el.ipQueryBtnEl = ipBtn;
-  el.ipResultEl = ipResult;
-  el.ipEmptyEl = ipEmpty;
-  ipBtn.addEventListener("click", lookupIp);
-  ipInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") lookupIp();
-  });
-}
-
 function setActiveTab(tab) {
   var isCountries = tab === "countries";
-  if (!isCountries) ensureIpPanel();
   if (el.tabCountriesEl) {
     el.tabCountriesEl.classList.toggle("tab-active", isCountries);
     el.tabCountriesEl.setAttribute("aria-selected", isCountries ? "true" : "false");
@@ -474,10 +430,9 @@ async function initQueryFromStorage() {
     var data = await chrome.storage.local.get(["initialQuery", "initialIpQuery"]);
     if (data.initialIpQuery) {
       chrome.storage.local.remove("initialIpQuery");
-      ensureIpPanel();
       if (el.ipInputEl) el.ipInputEl.value = data.initialIpQuery;
       setActiveTab("ip");
-      setTimeout(lookupIp, 350);
+      lookupIp();
       return;
     }
     if (data.initialQuery && el.searchInput) {
@@ -495,121 +450,28 @@ async function initQueryFromStorage() {
   }
 }
 
+// Chrome 只对 manifest.json 和 CSS 做 __MSG_ 替换，HTML 不会。
+// popup.html 里写的是 default_locale 文案，这里按当前语言覆盖。
+// 脚本带 defer，在首帧前执行；且窗口尺寸已由 CSS 锁定，改写文本不会引起 resize。
 function applyI18nStaticTexts() {
   try {
     document.title = t("popupTitle", document.title);
   } catch (_) {}
-  if (el.headerTitleEl) {
-    try { el.headerTitleEl.textContent = t("headerTitle", "国家查询"); } catch (_) {}
-  }
-  if (el.searchInput) {
-    try { el.searchInput.placeholder = t("searchPlaceholder", ""); } catch (_) {}
-  }
-  if (el.ipInputEl) {
-    try { el.ipInputEl.placeholder = t("ipPlaceholder", ""); } catch (_) {}
-  }
-  if (el.footerHintEl) {
-    try { el.footerHintEl.textContent = t("footerHint", ""); } catch (_) {}
-  }
-  try {
-    var nodes = document.querySelectorAll("[data-i18n]");
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
-      var key = node.getAttribute("data-i18n");
-      if (key) node.textContent = t(key, node.textContent || "");
-    }
-  } catch (_) {}
-}
 
-function buildUI() {
-  var root = document.getElementById("root");
-  if (!root) return;
-  root.textContent = "";
-  var c = document.createElement("div");
-  c.className = "container";
-  var header = document.createElement("header");
-  header.className = "header";
-  var h1 = document.createElement("h1");
-  h1.id = "headerTitle";
-  h1.className = "title";
-  h1.textContent = "国家查询";
-  var tabs = document.createElement("div");
-  tabs.className = "tabs";
-  tabs.setAttribute("role", "tablist");
-  var btnCountry = document.createElement("button");
-  btnCountry.id = "tabCountries";
-  btnCountry.className = "tab tab-active";
-  btnCountry.type = "button";
-  btnCountry.setAttribute("role", "tab");
-  btnCountry.setAttribute("aria-selected", "true");
-  btnCountry.setAttribute("data-i18n", "tabCountries");
-  btnCountry.textContent = "国家";
-  var btnIp = document.createElement("button");
-  btnIp.id = "tabIp";
-  btnIp.className = "tab";
-  btnIp.type = "button";
-  btnIp.setAttribute("role", "tab");
-  btnIp.setAttribute("aria-selected", "false");
-  btnIp.setAttribute("data-i18n", "tabIp");
-  btnIp.textContent = "IP";
-  tabs.appendChild(btnCountry);
-  tabs.appendChild(btnIp);
-  var searchInput = document.createElement("input");
-  searchInput.id = "searchInput";
-  searchInput.className = "search-input";
-  searchInput.type = "text";
-  searchInput.placeholder = "输入国家中文/英文/代码进行搜索";
-  header.appendChild(h1);
-  header.appendChild(tabs);
-  header.appendChild(searchInput);
-  var main = document.createElement("main");
-  main.className = "main";
-  var panelCountries = document.createElement("section");
-  panelCountries.id = "panelCountries";
-  panelCountries.className = "panel";
-  panelCountries.setAttribute("role", "tabpanel");
-  var table = document.createElement("table");
-  table.className = "results-table";
-  var thead = document.createElement("thead");
-  var tr = document.createElement("tr");
-  var thKeys = ["thChineseName", "thEnglishName", "thRegion", "thAlpha2", "thAlpha3", "thNumeric", "thActions"];
-  var thTexts = ["中文名", "英文名", "洲/地区", "Alpha-2", "Alpha-3", "数字码", "操作"];
-  for (var i = 0; i < thKeys.length; i++) {
-    var th = document.createElement("th");
-    th.setAttribute("data-i18n", thKeys[i]);
-    th.textContent = thTexts[i];
-    tr.appendChild(th);
+  var nodes = document.querySelectorAll("[data-i18n]");
+  for (var i = 0; i < nodes.length; i++) {
+    var key = nodes[i].getAttribute("data-i18n");
+    if (key) nodes[i].textContent = t(key, nodes[i].textContent || "");
   }
-  thead.appendChild(tr);
-  table.appendChild(thead);
-  var tbody = document.createElement("tbody");
-  tbody.id = "resultsBody";
-  table.appendChild(tbody);
-  var noResult = document.createElement("div");
-  noResult.id = "noResult";
-  noResult.className = "no-result";
-  noResult.hidden = true;
-  noResult.textContent = "请输入关键词开始查询";
-  panelCountries.appendChild(table);
-  panelCountries.appendChild(noResult);
-  var panelIp = document.createElement("section");
-  panelIp.id = "panelIp";
-  panelIp.className = "panel";
-  panelIp.hidden = true;
-  panelIp.setAttribute("role", "tabpanel");
-  main.appendChild(panelCountries);
-  main.appendChild(panelIp);
-  var footer = document.createElement("footer");
-  footer.className = "footer";
-  var hint = document.createElement("span");
-  hint.id = "footerHint";
-  hint.className = "hint";
-  hint.textContent = "提示：支持按国家中文、英文或代码模糊搜索";
-  footer.appendChild(hint);
-  c.appendChild(header);
-  c.appendChild(main);
-  c.appendChild(footer);
-  root.appendChild(c);
+
+  var phs = document.querySelectorAll("[data-i18n-placeholder]");
+  for (var j = 0; j < phs.length; j++) {
+    var pkey = phs[j].getAttribute("data-i18n-placeholder");
+    if (!pkey) continue;
+    var val = t(pkey, phs[j].getAttribute("placeholder") || "");
+    phs[j].setAttribute("placeholder", val);
+    phs[j].setAttribute("aria-label", val);
+  }
 }
 
 function initElements() {
@@ -634,7 +496,6 @@ function initElements() {
 
 function runInit() {
   try {
-    buildUI();
     initElements();
     if (!el.resultsBody) return;
     applyI18nStaticTexts();
@@ -646,34 +507,26 @@ function runInit() {
     if (root) root.textContent = "Init error: " + (err.message || err);
     return;
   }
-  function doAfterLoad() {
-    try {
-      initQueryFromStorage();
-    } catch (err) {
-      console.error("initQueryFromStorage error", err);
-    }
-  }
-  function scheduleLoad() {
-    if (typeof requestIdleCallback !== "undefined") {
-      requestIdleCallback(function () { loadCountries().then(doAfterLoad).catch(function (err) {
-        console.error("loadCountries error", err);
-        if (el.noResultEl) { el.noResultEl.textContent = "加载失败"; el.noResultEl.hidden = false; }
-      }); }, { timeout: 300 });
-    } else {
-      setTimeout(function () {
-        loadCountries().then(doAfterLoad).catch(function (err) {
-          console.error("loadCountries error", err);
-          if (el.noResultEl) { el.noResultEl.textContent = "加载失败"; el.noResultEl.hidden = false; }
-        });
-      }, 150);
-    }
-  }
-  scheduleLoad();
+
+  // 静态骨架已在 popup.html 中就位，这里只负责取数据。
+  // fetch 本身是异步的，不会推迟首帧，因此无需再包一层延迟。
+  loadCountries()
+    .then(function () {
+      try {
+        initQueryFromStorage();
+      } catch (err) {
+        console.error("initQueryFromStorage error", err);
+      }
+    })
+    .catch(function (err) {
+      console.error("loadCountries error", err);
+      if (el.noResultEl) {
+        el.noResultEl.textContent = t("loadFailed", "加载失败");
+        el.noResultEl.hidden = false;
+      }
+    });
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", function () { setTimeout(runInit, 80); });
-} else {
-  setTimeout(runInit, 80);
-}
+// popup.html 中 script 带 defer，执行时 DOM 已解析完毕，可直接初始化。
+runInit();
 

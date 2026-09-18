@@ -59,6 +59,9 @@
   "noResult": {
     "message": "暂无匹配结果"
   },
+  "loadFailed": {
+    "message": "加载失败"
+  },
   "toastCopied": {
     "message": "已复制__LABEL__：__VALUE__"
   },

@@ -1,8 +1,29 @@
+/* 固定窗口尺寸：Chrome 扩展 popup 的窗口大小由内容决定，
+   若不锁定，打开过程中每次内容尺寸变化都会触发窗口 resize（表现为闪烁）。 */
+html {
+  width: 640px;
+  height: 560px;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+/* body 与 .container 之间的中间层必须透传高度，
+   否则 .container 的 height:100% 因父级高度 auto 而失效，
+   .main 的 flex 收缩随之失效，footer 会被内容推出视口。 */
+#root {
+  height: 100%;
+}
+
 .container {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 13px;
-  width: 640px;
-  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding: 10px 12px 12px;
   box-sizing: border-box;
 }
@@ -12,6 +33,7 @@
   flex-direction: column;
   gap: 6px;
   margin-bottom: 8px;
+  flex: none;
 }
 
 .title {
@@ -55,7 +77,16 @@
   gap: 6px;
 }
 
+/* 输入框占据剩余宽度，按钮按内容取宽，避免按钮文字被压成竖排 */
+.ip-bar .search-input {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
 .ip-btn {
+  flex: none;
+  white-space: nowrap;
   border-radius: 4px;
   border: 1px solid #d0d7de;
   background: #ffffff;
@@ -108,8 +139,12 @@
 }
 
 .main {
-  max-height: 420px;
-  overflow: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* 始终预留滚动条槽位，避免滚动条出现时内容宽度变化 */
+  scrollbar-gutter: stable;
   border: 1px solid #e1e4e8;
   border-radius: 4px;
 }
@@ -182,6 +217,7 @@
   margin-top: 6px;
   font-size: 11px;
   color: #6a737d;
+  flex: none;
 }
 
 .no-result {
